@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+	<head>
+		<title>Blog Engine</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<div id="blogapp">
+			<header class="helvetica fill lightgrey spaceout">
+					<h1>Blog Engine</h1>
+			</header>
+			<ul id="blog-list"></ul>
+			<div>
+			<input type="text" class="title" id="new-post-title" placeholder="New Title" />
+			<textarea type="text" class="post" id="new-post-body" placeholder="New Body"></textarea>
+			<button id="add-post">Add</button>
+			</div>
+		</div>
+		<script src="jquery.js"></script>
+		<script src="underscore.js"></script>
+		<script src="backbone.js"></script>
+		<!-- Firebase -->
+		<script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+		<!-- BackboneFire -->
+		<script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>

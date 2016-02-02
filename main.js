@@ -11,13 +11,15 @@ var PostCollection = Backbone.Firebase.Collection.extend({
 var PostView = Backbone.View.extend({
 	tagName:"div",
 	template: _.template(
-					`<div class='title'><%= title %></div>
-					<div class='post'><%= body %></div> `),
+					`<div class='panel-item title'><%= title %></div>
+					<div class='panel-item'><%= desc %></div> 
+					<div class='panel-item'><%= body %></div> 
+					`),
 	initialize: function(){
 		this.listenTo(this.model,"change",this.render);
 	},
 	render: function(){
-		this.$el.html(this.template(this.model.toJSON()));
+		this.$el.html('<div class="panel">'+this.template(this.model.toJSON())+'</div>');
 		return this;
 	}
 });
@@ -30,6 +32,7 @@ var AppView = Backbone.View.extend({
   initialize: function() {
     this.list = this.$("#blog-list");
 	this.inputTitle = this.$("#new-post-title");
+    this.inputDesc = this.$("#new-post-desc");
     this.inputBody = this.$("#new-post-body");
     this.listenTo(this.collection, 'add', this.addOne);
   },
@@ -39,11 +42,15 @@ var AppView = Backbone.View.extend({
   },
   createPost: function(e) {
 	console.log('creating post');
-    if (!this.inputTitle.val() && !this.inputBody.val()) { return; }
+    if (!this.inputTitle.val() || !this.inputBody.val() || !this.inputDesc.val()) { console.log('post was empty!'); return; }
     this.collection.create({title: this.inputTitle.val(),
-							body: this.inputBody.val()});
+							desc: this.inputDesc.val(),
+							body: this.inputBody.val()
+							});
     this.inputTitle.val('');
+    this.inputDesc.val('');
     this.inputBody.val('');
+	showNewPost();
   }
 });
 
@@ -54,3 +61,19 @@ function init() {
 $(function() {
   init();
 });
+
+var hideButton = '<span class="mega-octicon octicon-diff-removed"></span>';
+var showButton = '<span class="mega-octicon octicon-diff-added"></span>';
+function showNewPost(){
+	var newPost = $('#new-post');
+	var newPostButton = $('#new-post-button');
+	if(newPostButton.hasClass('add')){
+		newPost[0].style.display = 'block';	
+		newPostButton.removeClass('add');
+		newPostButton.html(hideButton);
+	} else {
+		newPost[0].style.display = 'none';	
+		newPostButton.addClass('add');
+		newPostButton.html(showButton);
+	}
+}

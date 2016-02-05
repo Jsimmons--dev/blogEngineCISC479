@@ -24,9 +24,11 @@ var modal = _.template(
 						   	placeholder="New Description"></input>
 							<textarea class="margin-med" rows=10 type="type" id="new-post-body" 
 							placeholder="New Body"></textarea>
-							<div class="margin-med" style="height:400px" id="new-code-editor"></div>
-							<button class="margin-med" id="add-code-button">Add</button>
-							<button class="margin-med" id="add-post-button">Add</button>
+							<div class="margin-med" style="height:100px" id="new-code-editor"></div>
+							<div class="flex">
+							<button class="margin-med button-pad" id="add-post-button">Post</button>
+							<button class="margin-med button-pad" id="add-code-button">Insert Code</button>
+							</div>
 						</div>	
 					</div>`);
 
@@ -74,7 +76,7 @@ var PostView = Backbone.View.extend({
 			var editor = ace.edit(codeTags[i].querySelector('div'));
 	editor.setTheme('ace/theme/monokai');
 	editor.getSession().setMode('ace/mode/javascript');
-	editor.setValue(oldCode);
+	editor.setValue(oldCode,-1);
 	editor.setReadOnly(true);
 		}
 		console.log(codeTags);

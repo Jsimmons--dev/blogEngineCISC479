@@ -18,13 +18,13 @@ var modal = _.template(
 						<div id="new-post-pane" class="solid rounded bg-white">
 							${newButton({click:'hideExperimentModal()',icon:'x'})}
 							${newButton({click:'rotateStyles()',icon:'flame'})}
-							<input type="text" id="new-post-title"
+							<input type="text" class="margin-med" id="new-post-title"
 							 placeholder="New Title"></input>
-							<input type="text" id="new-post-desc"
+							<input type="text" class="margin-med" id="new-post-desc"
 						   	placeholder="New Description"></input>
-							<textarea rows=10 type="type" id="new-post-body" 
+							<textarea class="margin-med" rows=10 type="type" id="new-post-body" 
 							placeholder="New Body"></textarea>
-							<button id="add-post-button">Add</button>
+							<button class="margin-med" id="add-post-button">Add</button>
 						</div>	
 					</div>`);
 

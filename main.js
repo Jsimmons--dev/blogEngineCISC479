@@ -24,6 +24,8 @@ var modal = _.template(
 						   	placeholder="New Description"></input>
 							<textarea class="margin-med" rows=10 type="type" id="new-post-body" 
 							placeholder="New Body"></textarea>
+							<div class="margin-med" style="height:400px" id="new-code-editor"></div>
+							<button class="margin-med" id="add-code-button">Add</button>
 							<button class="margin-med" id="add-post-button">Add</button>
 						</div>	
 					</div>`);
@@ -38,9 +40,14 @@ function hideExperimentModal() {
         }));
 }
 
+var globalShame = {};
+
 function showExperimentModal() {
     $('#blogapp')
         .prepend(modal({}));
+	globalShame.editor = ace.edit('new-code-editor');
+	globalShame.editor.setTheme('ace/theme/monokai');
+	globalShame.editor.getSession().setMode('ace/mode/javascript');
     $('#new-style-button')
         .html('');
 }
@@ -58,6 +65,19 @@ var PostView = Backbone.View.extend({
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
+		var codeTags = this.$el[0].querySelectorAll('code');
+		for (var i = 0; i < codeTags.length;i++){
+				var oldCode = codeTags[i].innerHTML;
+				codeTags[i].innerHTML = '<div></div>';
+				codeTags[i].querySelector('div').style.height='100px';
+				codeTags[i].querySelector('div').style.width='500px';
+			var editor = ace.edit(codeTags[i].querySelector('div'));
+	editor.setTheme('ace/theme/monokai');
+	editor.getSession().setMode('ace/mode/javascript');
+	editor.setValue(oldCode);
+	editor.setReadOnly(true);
+		}
+		console.log(codeTags);
         return this;
     }
 });
@@ -65,7 +85,9 @@ var PostView = Backbone.View.extend({
 var AppView = Backbone.View.extend({
     el: $('#blogapp'),
     events: {
-        "click #add-post-button": "createPost"
+        "click #add-post-button": "createPost",
+        "click #add-code-button": "addCode",
+
     },
     initialize: function () {
         this.list = this.$("#blog-list");
@@ -81,13 +103,16 @@ var AppView = Backbone.View.extend({
         this.list.append(view.render()
             .el);
     },
+	addCode: function(e){
+		this.inputBody = this.$('#new-post-body');	
+		console.log(globalShame.editor.getValue());
+		this.inputBody.val(this.inputBody.val()+'<code>'+globalShame.editor.getValue()+'</code>');
+	},
     createPost: function (e) {
         this.inputTitle = this.$("#new-post-title");
         this.inputDesc = this.$("#new-post-desc");
         this.inputBody = this.$("#new-post-body");
-        console.log('creating post');
         if (!this.inputTitle.val() || !this.inputBody.val() || !this.inputDesc.val()) {
-            console.log('post was empty!');
             return;
         }
         this.collection.create({
@@ -169,7 +194,6 @@ var Styler = function (packetList) {
         style.forEach((d) => {
             var nodes = document.querySelectorAll(d[0]);
             for (var i = 0; i < nodes.length; ++i) {
-                console.log(nodes[i]);
                 nodes[i].className = d[1];
             }
         });
